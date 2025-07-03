@@ -1,0 +1,15 @@
+# Python dependencies for MLOps project
+# Python version: 3.11.13
+
+# Core data science libraries
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Visualization libraries
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Additional useful libraries for ML projects
+jupyter>=1.0.0
+ipykernel>=6.25.0
