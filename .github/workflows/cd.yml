@@ -5,6 +5,7 @@ on:
     workflows: ["Continuous Integration"]
     types:
       - completed
+    branches: [Firman]
   workflow_dispatch:
 
 jobs:
@@ -25,4 +26,3 @@ jobs:
           echo "Token exists: $(if [ -n "$HF_TOKEN" ]; then echo "YES"; else echo "NO"; fi)"
           echo "User: $USER_NAME <$USER_EMAIL>"
           make deploy HF_TOKEN="$HF_TOKEN" USER_NAME="$USER_NAME" USER_EMAIL="$USER_EMAIL"
- 
