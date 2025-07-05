@@ -2,7 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [Firman]
+    branches: ["Firman"]
+  pull_request:
+    branches: ["Firman"]
+  workflow_dispatch:
 
 permissions: write-all
 
