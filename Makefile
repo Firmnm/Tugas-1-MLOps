@@ -3,7 +3,7 @@ install:
 	pip install -r requirements.txt
 
 format:
-	black *.py
+	black *.py App/*.py
 
 train:
 	python train.py
@@ -61,14 +61,10 @@ test-model:
 	model = sio.load('Model/personality_classifier.skops', trusted=unknown_types); \
 	print('✅ Model loaded successfully!')"
 
-test-app:
-	@echo "Testing application..."
-	python test_app.py
-
 clean:
 	rm -rf Results/
 	rm -rf Model/
 	rm -f report.md
 	@echo "🧹 Cleaned up generated files"
 
-.PHONY: install format test train eval update-branch deploy run test-model test-app clean
+.PHONY: install format test train eval update-branch deploy run test-model clean

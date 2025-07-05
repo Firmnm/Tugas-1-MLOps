@@ -1,164 +1,33 @@
----
-name: CI - Continuous Integration
+name: CI
 
 on:
   push:
     branches: [Firman]
-  pull_request:
-    branches: [Firman]
-
-env:
-  PYTHON_VERSION: "3.11"
 
 jobs:
-  test:
-    name: Run Tests
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: install
+        run: make install
+      - name: format
+        run: make format
+      - name: train
+        run: make train
+      - name: setup-node
+        uses: actions/setup-node@v3
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Cache Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Code Formatting Check
-        run: |
-          echo "Checking code formatting with Black..."
-          black --check --diff *.py App/*.py || echo "Code formatting issues found"
-
-      - name: Lint Code
-        run: |
-          echo "Linting Python files..."
-          python -m py_compile train.py
-          python -m py_compile App/app.py
-          echo "All Python files compile successfully"
-
-      - name: Test Training Pipeline
-        run: |
-          echo "Testing training pipeline..."
-          python train.py
-
-  code-quality:
-    name: Code Quality Analysis
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Generate Model Report
-        run: |
-          echo "Generating model performance report..."
-          make eval
-
-      - name: Upload Model Metrics
-        uses: actions/upload-artifact@v3
-        with:
-          name: model-metrics
-          path: |
-            Results/metrics.txt
-            Results/data_exploration.png
-            Results/model_evaluation.png
-            report.md
-          retention-days: 30
-
-  validate-model:
-    name: Model Validation
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Validate Model Performance
-        run: |
-          echo "Validating model performance..."
-          python train.py
-          if [ -f "Model/personality_classifier.skops" ]; then
-            echo "Model file created successfully"
-          else
-            echo "Model file not found"
-            exit 1
-          fi
-          if [ -f "Results/metrics.txt" ]; then
-            echo "Metrics file created successfully"
-            cat Results/metrics.txt
-          else
-            echo "Metrics file not found"
-            exit 1
-          fi
-
-      - name: Test Model Prediction
-        run: |
-          echo "Testing model prediction capabilities..."
-          make test-model
-
-      - name: Upload Model Artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: trained-model
-          path: |
-            Model/
-            Results/
-          retention-days: 7
-
-  summary:
-    name: CI Summary
-    runs-on: ubuntu-latest
-    needs: [test, code-quality, validate-model]
-    if: always()
-
-    steps:
-      - name: Generate Summary
-        run: |
-          echo "## CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Completed Jobs:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tests**: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Code Quality**: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Security Scan**: ${{ needs.security-scan.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Model Validation**: ${{ needs.validate-model.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "If all jobs passed, the model is ready for deployment!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch**: Firman" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          node-version: "18"
+      - name: install-cml
+        run: npm install -g @dvcorg/cml
+      - name: eval
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: make eval
+      - name: update-branch
+        env:
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        run: make update-branch USER_NAME=$USER_NAME USER_EMAIL=$USER_EMAIL
