@@ -411,12 +411,6 @@ def create_interface():
                     "🔮 Prediksi Personality", variant="primary", size="lg"
                 )
 
-                # Tambahkan tombol contoh
-                gr.Markdown("### 🎲 Coba Contoh:")
-                example_btn = gr.Button(
-                    "📝 Isi Contoh Data", variant="secondary", size="sm"
-                )
-
         with gr.Row():
             with gr.Column(scale=2):
                 result_output = gr.Markdown(
@@ -513,30 +507,6 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
             outputs=[result_output, confidence_plot, status_indicator],
         )
 
-        # Event handler untuk contoh data
-        def fill_example_data():
-            return [
-                6.0,  # time_alone
-                "No",  # stage_fear
-                7,  # social_events
-                8,  # going_outside
-                "No",  # drained_socializing
-                12,  # friends_circle
-                6,  # post_frequency
-            ]
-
-        example_btn.click(
-            fn=fill_example_data,
-            outputs=[
-                time_alone,
-                stage_fear,
-                social_events,
-                going_outside,
-                drained_socializing,
-                friends_circle,
-                post_frequency,
-            ],
-        )
 
         gr.Markdown(
             """
@@ -563,6 +533,5 @@ if __name__ == "__main__":
         server_port=7860,
         share=False,
         show_api=False,
-
     )
 
