@@ -257,12 +257,7 @@ class PersonalityClassifierApp:
                 }
             )
 
-            # Update status
-            status_update = (
-                f"✅ **Status:** Prediksi selesai - {personality_type} ({max_prob:.1%})"
-            )
-
-            return result, plot_data, True, status_update
+            return result, plot_data, True
 
         except Exception as e:
             error_msg = f"❌ Error dalam prediksi: {str(e)}"
