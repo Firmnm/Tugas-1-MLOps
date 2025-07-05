@@ -203,7 +203,7 @@ class PersonalityClassifierApp:
                 # Tambahkan emoji untuk setiap personality
                 class_emoji = personality_emoji.get(personality, "ðŸ‘¤")
                 result += f"\n**{class_emoji} {personality}:** {score}\n"
-                result += f"{bar} {prob_value:.1%}\n"
+                result += f"`{bar}` {prob_value:.1%}\n"
 
             # Tambahkan interpretasi hasil
             result += f"\n---\n\n### ðŸ’¡ Interpretasi:\n"
@@ -418,7 +418,7 @@ def create_interface():
                 )
 
         with gr.Row():
-            with gr.Column(scale=2):
+            with gr.Column(scale=3):
                 result_output = gr.Markdown(
                     label="ðŸ“Š Hasil Prediksi",
                     value="""
@@ -438,17 +438,6 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ðŸ”
                     elem_id="result_output",
                 )
 
-            with gr.Column(scale=1):
-                # Tambahkan komponen untuk visualisasi confidence
-                confidence_plot = gr.BarPlot(
-                    title="ðŸ“Š Confidence Scores",
-                    x_title="Personality Type",
-                    y_title="Confidence (%)",
-                    width=400,
-                    height=300,
-                    visible=False,
-                )
-
             with gr.Column():
                 gr.Markdown(
                     """
@@ -456,7 +445,7 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ðŸ”
                 
                 **Model:** Random Forest Classifier  
                 **Features:** 7 fitur input  
-                **Akurasi:** Lihat file Results/metrics.txt  
+                **Akurasi:** Lihat file `Results/metrics.txt`  
                 
                 **Fitur yang digunakan:**
                 - Waktu sendirian (jam/hari)
@@ -475,23 +464,15 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ðŸ”
         # Event handler untuk prediksi dengan loading state
         def predict_with_loading(*inputs):
             # Update status ke loading
-            yield [
-                "ðŸ”„ **Sedang memproses prediksi...**\n\nMohon tunggu sebentar...",
-                None,
-            ]
+            yield "ðŸ”„ **Sedang memproses prediksi...**\n\nMohon tunggu sebentar..."
 
             # Jalankan prediksi
             result_text, plot_data, plot_visible, status_text = app.predict_personality(
                 *inputs
             )
 
-            # Update confidence plot visibility dengan mengupdate data
-            if plot_visible and plot_data is not None:
-                yield [result_text, plot_data]
-            else:
-                # Return empty dataframe for plot when no data
-                empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-                yield [result_text, empty_df]
+            # Return hasil prediksi
+            yield result_text
 
         predict_btn.click(
             fn=predict_with_loading,
@@ -504,7 +485,7 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ðŸ”
                 friends_circle,
                 post_frequency,
             ],
-            outputs=[result_output, confidence_plot],
+            outputs=[result_output],
         )
 
         # Event handler untuk contoh data
