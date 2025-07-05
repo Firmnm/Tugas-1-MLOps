@@ -48,7 +48,7 @@ deploy:
 	@echo "📋 Uploading requirements..."
 	huggingface-cli upload firmnnm/Tugas1MLOps ./requirements.txt requirements.txt --repo-type=space --commit-message="Upload requirements"
 	@echo "📄 Uploading README..."
-	huggingface-cli upload firmnnm/Tugas1MLOps ./README_SPACES.md README.md --repo-type=space --commit-message="Upload README for Spaces"
+	huggingface-cli upload firmnnm/Tugas1MLOps ./README.md README.md --repo-type=space --commit-message="Upload README for Spaces"
 	@echo "✅ Deployment to Hugging Face Spaces completed!"
 
 run:

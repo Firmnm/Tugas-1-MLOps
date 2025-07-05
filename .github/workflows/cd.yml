@@ -5,21 +5,22 @@ on:
     workflows: ["Continuous Integration"]
     types:
       - completed
-    branches:
-      - Firman
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     if: >
-      ${{ github.event.workflow_run.conclusion == 'success' ||
-          github.event_name == 'workflow_dispatch' }}
+      ${{
+        (github.event.workflow_run.conclusion == 'success' &&
+         github.event.workflow_run.head_branch == 'Firman') ||
+        github.event_name == 'workflow_dispatch'
+      }}
 
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: Firman
+          ref: ${{ github.event.workflow_run.head_branch }}
 
       - name: Install Dependencies
         run: make install
