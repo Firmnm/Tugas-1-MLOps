@@ -257,14 +257,15 @@ class PersonalityClassifierApp:
                 }
             )
 
+            
+
             return result, plot_data, True
 
         except Exception as e:
             error_msg = f"âŒ Error dalam prediksi: {str(e)}"
-            error_status = "âŒ **Status:** Error dalam prediksi"
             # Return empty dataframe for error case
             empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-            return error_msg, empty_df, False, error_status
+            return error_msg, empty_df, False
 
 
 def create_interface():
@@ -434,10 +435,6 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ğŸ”
                 )
 
             with gr.Column(scale=1):
-                # Status indicator
-                status_indicator = gr.Markdown(
-                    value="â³ **Status:** Siap untuk prediksi", visible=True
-                )
 
                 # Tambahkan komponen untuk visualisasi confidence
                 confidence_plot = gr.BarPlot(
@@ -478,7 +475,6 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ğŸ”
             yield [
                 "ğŸ”„ **Sedang memproses prediksi...**\n\nMohon tunggu sebentar...",
                 None,
-                "ğŸ”„ **Status:** Sedang memproses...",
             ]
 
             # Jalankan prediksi
@@ -505,7 +501,7 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **ğŸ”
                 friends_circle,
                 post_frequency,
             ],
-            outputs=[result_output, confidence_plot, status_indicator],
+            outputs=[result_output, confidence_plot],
         )
 
         # Event handler untuk contoh data
@@ -558,5 +554,6 @@ if __name__ == "__main__":
         server_port=7860,
         share=False,
         show_api=False,
+
     )
 
