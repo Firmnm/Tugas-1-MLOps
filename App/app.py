@@ -189,8 +189,24 @@ class PersonalityClassifierApp:
 
 ---
 
-### � Interpretasi:
+### 📊 Detailed Confidence Scores:
 """
+
+            # Tambahkan progress bar visual untuk setiap kelas
+            for personality, score in confidence_scores.items():
+                prob_value = probabilities[list(classes).index(personality)]
+                bar_length = int(
+                    prob_value * 20
+                )  # Bar dengan panjang maksimal 20 karakter
+                bar = "█" * bar_length + "░" * (20 - bar_length)
+
+                # Tambahkan emoji untuk setiap personality
+                class_emoji = personality_emoji.get(personality, "👤")
+                result += f"\n**{class_emoji} {personality}:** {score}\n"
+                result += f"{bar} {prob_value:.1%}\n"
+
+            # Tambahkan interpretasi hasil
+            result += f"\n---\n\n### 💡 Interpretasi:\n"
 
             if max_prob >= 0.8:
                 result += (
@@ -241,13 +257,19 @@ class PersonalityClassifierApp:
                 }
             )
 
-            return result, plot_data, True
+            # Update status
+            status_update = (
+                f"✅ **Status:** Prediksi selesai - {personality_type} ({max_prob:.1%})"
+            )
+
+            return result, plot_data, True, status_update
 
         except Exception as e:
             error_msg = f"❌ Error dalam prediksi: {str(e)}"
+            error_status = "❌ **Status:** Error dalam prediksi"
             # Return empty dataframe for error case
             empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-            return error_msg, empty_df, False
+            return error_msg, empty_df, False, error_status
 
 
 def create_interface():
@@ -389,8 +411,14 @@ def create_interface():
                     "🔮 Prediksi Personality", variant="primary", size="lg"
                 )
 
+                # Tambahkan tombol contoh
+                gr.Markdown("### 🎲 Coba Contoh:")
+                example_btn = gr.Button(
+                    "📝 Isi Contoh Data", variant="secondary", size="sm"
+                )
+
         with gr.Row():
-            with gr.Column(scale=3):
+            with gr.Column(scale=2):
                 result_output = gr.Markdown(
                     label="📊 Hasil Prediksi",
                     value="""
@@ -416,13 +444,9 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
                     title="📊 Confidence Scores",
                     x_title="Personality Type",
                     y_title="Confidence (%)",
-                    width=300,
-                    height=400,
-                    visible=True,
-                    value=pd.DataFrame({
-                        "Personality": ["Extrovert", "Introvert", "Ambivert"],
-                        "Confidence": [30, 40, 30]
-                    })
+                    width=400,
+                    height=300,
+                    visible=False,
                 )
 
             with gr.Column():
@@ -432,7 +456,7 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
                 
                 **Model:** Random Forest Classifier  
                 **Features:** 7 fitur input  
-                **Akurasi:** Lihat file `Results/metrics.txt`  
+                **Akurasi:** Lihat file Results/metrics.txt  
                 
                 **Fitur yang digunakan:**
                 - Waktu sendirian (jam/hari)
@@ -457,7 +481,9 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
             ]
 
             # Jalankan prediksi
-            result_text, plot_data, plot_visible = app.predict_personality(*inputs)
+            result_text, plot_data, plot_visible, status_text = app.predict_personality(
+                *inputs
+            )
 
             # Update confidence plot visibility dengan mengupdate data
             if plot_visible and plot_data is not None:
@@ -481,6 +507,30 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
             outputs=[result_output, confidence_plot],
         )
 
+        # Event handler untuk contoh data
+        def fill_example_data():
+            return [
+                6.0,  # time_alone
+                "No",  # stage_fear
+                7,  # social_events
+                8,  # going_outside
+                "No",  # drained_socializing
+                12,  # friends_circle
+                6,  # post_frequency
+            ]
+
+        example_btn.click(
+            fn=fill_example_data,
+            outputs=[
+                time_alone,
+                stage_fear,
+                social_events,
+                going_outside,
+                drained_socializing,
+                friends_circle,
+                post_frequency,
+            ],
+        )
 
         gr.Markdown(
             """
@@ -508,4 +558,3 @@ if __name__ == "__main__":
         share=False,
         show_api=False,
     )
-
