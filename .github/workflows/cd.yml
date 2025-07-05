@@ -1,46 +1,27 @@
 name: Continuous Deployment
 
 on:
-  push:
-    branches: ["Firman"]
-  pull_request:
-    branches: ["Firman"]
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
   workflow_dispatch:
-
-permissions: write-all
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Install Packages
-        run: make install
-
-      - name: Format Code
-        run: make format
-
-      - name: Train Model
-        run: make train
-
-      - name: Setup Node.js (for CML)
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-
-      - name: Install CML
-        run: npm install -g @dvcorg/cml
-
-      - name: Evaluate Model
+      - name: Deployment To Hugging Face
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: make eval
-
-      - name: Update Branch
-        env:
-          NAME: ${{ secrets.USER_NAME }}
-          EMAIL: ${{ secrets.USER_EMAIL }}
-        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        run: |
+          echo "Starting deployment with HF token..."
+          echo "Token exists: $(if [ -n "$HF_TOKEN" ]; then echo "YES"; else echo "NO"; fi)"
+          echo "User: $USER_NAME <$USER_EMAIL>"
+          make deploy HF_TOKEN="$HF_TOKEN" USER_NAME="$USER_NAME" USER_EMAIL="$USER_EMAIL"
