@@ -6,6 +6,11 @@ on:
     types:
       - completed
     branches: [Firman]
+  push:
+    branches: [Firman]
+    paths:
+      - "App/**"
+      - "Model/**"
   workflow_dispatch:
 
 jobs:
