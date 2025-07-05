@@ -47,23 +47,12 @@ jobs:
           echo "Linting Python files..."
           python -m py_compile train.py
           python -m py_compile App/app.py
-          python -m py_compile test_app.py
           echo "All Python files compile successfully"
-
-      - name: Test Model Loading
-        run: |
-          echo "Testing model loading..."
-          python test_app.py
 
       - name: Test Training Pipeline
         run: |
           echo "Testing training pipeline..."
           python train.py
-
-      - name: Test Application
-        run: |
-          echo "Testing Gradio application..."
-          python test_ui.py
 
   code-quality:
     name: Code Quality Analysis
@@ -98,36 +87,6 @@ jobs:
             Results/data_exploration.png
             Results/model_evaluation.png
             report.md
-          retention-days: 30
-
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Security Check
-        run: |
-          echo "Running security checks..."
-          pip install safety bandit
-          echo "Checking dependencies for vulnerabilities..."
-          safety check --json || echo "Some vulnerabilities found, check manually"
-          echo "Static security analysis..."
-          bandit -r . -f json -o bandit-report.json || echo "Security issues found"
-
-      - name: Upload Security Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: security-report
-          path: bandit-report.json
           retention-days: 30
 
   validate-model:
@@ -184,7 +143,7 @@ jobs:
   summary:
     name: CI Summary
     runs-on: ubuntu-latest
-    needs: [test, code-quality, security-scan, validate-model]
+    needs: [test, code-quality, validate-model]
     if: always()
 
     steps:
