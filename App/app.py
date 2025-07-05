@@ -189,24 +189,8 @@ class PersonalityClassifierApp:
 
 ---
 
-### 📊 Detailed Confidence Scores:
+### � Interpretasi:
 """
-
-            # Tambahkan progress bar visual untuk setiap kelas
-            for personality, score in confidence_scores.items():
-                prob_value = probabilities[list(classes).index(personality)]
-                bar_length = int(
-                    prob_value * 20
-                )  # Bar dengan panjang maksimal 20 karakter
-                bar = "█" * bar_length + "░" * (20 - bar_length)
-
-                # Tambahkan emoji untuk setiap personality
-                class_emoji = personality_emoji.get(personality, "👤")
-                result += f"\n**{class_emoji} {personality}:** {score}\n"
-                result += f"`{bar}` {prob_value:.1%}\n"
-
-            # Tambahkan interpretasi hasil
-            result += f"\n---\n\n### 💡 Interpretasi:\n"
 
             if max_prob >= 0.8:
                 result += (
@@ -257,19 +241,13 @@ class PersonalityClassifierApp:
                 }
             )
 
-            # Update status
-            status_update = (
-                f"✅ **Status:** Prediksi selesai - {personality_type} ({max_prob:.1%})"
-            )
-
-            return result, plot_data, True, status_update
+            return result, plot_data, True
 
         except Exception as e:
             error_msg = f"❌ Error dalam prediksi: {str(e)}"
-            error_status = "❌ **Status:** Error dalam prediksi"
             # Return empty dataframe for error case
             empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-            return error_msg, empty_df, False, error_status
+            return error_msg, empty_df, False
 
 
 def create_interface():
@@ -412,7 +390,7 @@ def create_interface():
                 )
 
         with gr.Row():
-            with gr.Column(scale=2):
+            with gr.Column(scale=3):
                 result_output = gr.Markdown(
                     label="📊 Hasil Prediksi",
                     value="""
@@ -433,19 +411,18 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
                 )
 
             with gr.Column(scale=1):
-                # Status indicator
-                status_indicator = gr.Markdown(
-                    value="⏳ **Status:** Siap untuk prediksi", visible=True
-                )
-
                 # Tambahkan komponen untuk visualisasi confidence
                 confidence_plot = gr.BarPlot(
                     title="📊 Confidence Scores",
                     x_title="Personality Type",
                     y_title="Confidence (%)",
-                    width=400,
-                    height=300,
-                    visible=False,
+                    width=300,
+                    height=400,
+                    visible=True,
+                    value=pd.DataFrame({
+                        "Personality": ["Extrovert", "Introvert", "Ambivert"],
+                        "Confidence": [30, 40, 30]
+                    })
                 )
 
             with gr.Column():
@@ -477,21 +454,18 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
             yield [
                 "🔄 **Sedang memproses prediksi...**\n\nMohon tunggu sebentar...",
                 None,
-                "🔄 **Status:** Sedang memproses...",
             ]
 
             # Jalankan prediksi
-            result_text, plot_data, plot_visible, status_text = app.predict_personality(
-                *inputs
-            )
+            result_text, plot_data, plot_visible = app.predict_personality(*inputs)
 
             # Update confidence plot visibility dengan mengupdate data
             if plot_visible and plot_data is not None:
-                yield [result_text, plot_data, status_text]
+                yield [result_text, plot_data]
             else:
                 # Return empty dataframe for plot when no data
                 empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-                yield [result_text, empty_df, status_text]
+                yield [result_text, empty_df]
 
         predict_btn.click(
             fn=predict_with_loading,
@@ -504,7 +478,7 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
                 friends_circle,
                 post_frequency,
             ],
-            outputs=[result_output, confidence_plot, status_indicator],
+            outputs=[result_output, confidence_plot],
         )
 
 
