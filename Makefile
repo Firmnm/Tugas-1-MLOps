@@ -18,7 +18,7 @@ eval:
 	echo '\n## Model Evaluation Plot' >> report.md
 	echo '![Model Evaluation](./Results/model_evaluation.png)' >> report.md
 
-	cml comment create report.md
+	@echo "Report generated: report.md"
 
 update-branch:
 	git config user.name "$(USER_NAME)"
