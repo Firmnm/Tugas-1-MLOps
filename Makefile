@@ -61,10 +61,4 @@ test-model:
 	model = sio.load('Model/personality_classifier.skops', trusted=unknown_types); \
 	print('✅ Model loaded successfully!')"
 
-clean:
-	rm -rf Results/
-	rm -rf Model/
-	rm -f report.md
-	@echo "🧹 Cleaned up generated files"
-
 .PHONY: install format test train eval update-branch deploy run test-model clean

@@ -12,27 +12,35 @@ permissions: write-all
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3
-      - name: install
+
+      - name: Install Packages
         run: make install
-      - name: format
+
+      - name: Format Code
         run: make format
-      - name: train
+
+      - name: Train Model
         run: make train
-      - name: setup-node
+
+      - name: Setup Node.js (for CML)
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-      - name: install-cml
+
+      - name: Install CML
         run: npm install -g @dvcorg/cml
-      - name: eval
+
+      - name: Evaluate Model
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
-      - name: update-branch
+
+      - name: Update Branch
         env:
-          USER_NAME: ${{ secrets.USER_NAME }}
-          USER_EMAIL: ${{ secrets.USER_EMAIL }}
-        run: make update-branch USER_NAME=$USER_NAME USER_EMAIL=$USER_EMAIL
+          NAME: ${{ secrets.USER_NAME }}
+          EMAIL: ${{ secrets.USER_EMAIL }}
+        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
