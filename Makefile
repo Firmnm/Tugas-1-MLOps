@@ -25,7 +25,7 @@ update-branch:
 	git config user.email "$(USER_EMAIL)"
 	git add Results/ Model/ report.md
 	git commit -m "Update: training and evaluation results" || echo "Nothing to commit"
-	git push origin Firman
+	git push origin Shofy
 
 deploy:
 	@echo "Deploying to Hugging Face Spaces..."
