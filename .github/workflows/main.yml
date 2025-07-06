@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: ["Firman"]
+    branches: ["Shofy"]
   pull_request:
-    branches: ["Firman"]
+    branches: ["Shofy"]
   workflow_dispatch:
 
 permissions: write-all
