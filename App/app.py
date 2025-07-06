@@ -5,6 +5,14 @@ import skops.io as sio
 from skops.io import get_untrusted_types
 import os
 
+# Import untuk error handling
+try:
+    import httpx
+    import httpcore
+    HTTPX_AVAILABLE = True
+except ImportError:
+    HTTPX_AVAILABLE = False
+
 
 class PersonalityClassifierApp:
     def __init__(self):
@@ -19,35 +27,75 @@ class PersonalityClassifierApp:
         try:
             print("🔄 Memuat model dan preprocessing objects...")
 
-            # Memuat model utama
-            model_path = "Model/personality_classifier.skops"
-            if os.path.exists(model_path):
+            # Menentukan base path untuk model files
+            base_path = os.path.dirname(os.path.abspath(__file__))
+            parent_path = os.path.dirname(base_path)
+            
+            # Mencoba beberapa lokasi untuk file model
+            possible_paths = [
+                "Model/personality_classifier.skops",  # Local development
+                os.path.join(parent_path, "Model/personality_classifier.skops"),  # Relative to App folder
+                "./Model/personality_classifier.skops",  # Current directory
+                "personality_classifier.skops"  # Hugging Face Spaces root
+            ]
+            
+            model_path = None
+            for path in possible_paths:
+                if os.path.exists(path):
+                    model_path = path
+                    break
+            
+            if model_path:
                 unknown_types = get_untrusted_types(file=model_path)
                 self.model = sio.load(model_path, trusted=unknown_types)
-                print("✅ Model berhasil dimuat")
+                print(f"✅ Model berhasil dimuat dari: {model_path}")
             else:
-                print(f"❌ File model tidak ditemukan: {model_path}")
+                print(f"❌ File model tidak ditemukan di lokasi manapun: {possible_paths}")
                 return False
 
             # Memuat label encoder
-            encoder_path = "Model/label_encoder.skops"
-            if os.path.exists(encoder_path):
+            encoder_possible_paths = [
+                "Model/label_encoder.skops",
+                os.path.join(parent_path, "Model/label_encoder.skops"),
+                "./Model/label_encoder.skops",
+                "label_encoder.skops"
+            ]
+            
+            encoder_path = None
+            for path in encoder_possible_paths:
+                if os.path.exists(path):
+                    encoder_path = path
+                    break
+            
+            if encoder_path:
                 unknown_types = get_untrusted_types(file=encoder_path)
                 self.label_encoder = sio.load(encoder_path, trusted=unknown_types)
-                print("✅ Label encoder berhasil dimuat")
+                print(f"✅ Label encoder berhasil dimuat dari: {encoder_path}")
             else:
-                print(f"❌ File label encoder tidak ditemukan: {encoder_path}")
+                print(f"❌ File label encoder tidak ditemukan di lokasi manapun: {encoder_possible_paths}")
                 return False
 
             # Memuat feature names
-            features_path = "Model/feature_names.skops"
-            if os.path.exists(features_path):
+            features_possible_paths = [
+                "Model/feature_names.skops",
+                os.path.join(parent_path, "Model/feature_names.skops"),
+                "./Model/feature_names.skops",
+                "feature_names.skops"
+            ]
+            
+            features_path = None
+            for path in features_possible_paths:
+                if os.path.exists(path):
+                    features_path = path
+                    break
+            
+            if features_path:
                 unknown_types = get_untrusted_types(file=features_path)
                 self.feature_names = sio.load(features_path, trusted=unknown_types)
-                print("✅ Feature names berhasil dimuat")
+                print(f"✅ Feature names berhasil dimuat dari: {features_path}")
                 print(f"Features: {self.feature_names}")
             else:
-                print(f"❌ File feature names tidak ditemukan: {features_path}")
+                print(f"❌ File feature names tidak ditemukan di lokasi manapun: {features_possible_paths}")
                 return False
 
             return True
@@ -136,8 +184,8 @@ class PersonalityClassifierApp:
             result = f"""
 ## {emoji} Hasil Prediksi Personality
 
-### 🎯 *{personality_type.upper()}* 
-*Confidence: {max_prob:.1%}*
+### 🎯 **{personality_type.upper()}** 
+**Confidence: {max_prob:.1%}**
 
 ---
 
@@ -154,25 +202,25 @@ class PersonalityClassifierApp:
 
                 # Tambahkan emoji untuk setiap personality
                 class_emoji = personality_emoji.get(personality, "👤")
-                result += f"\n*{class_emoji} {personality}:* {score}\n"
-                result += f"{bar} {prob_value:.1%}\n"
+                result += f"\n**{class_emoji} {personality}:** {score}\n"
+                result += f"`{bar}` {prob_value:.1%}\n"
 
             # Tambahkan interpretasi hasil
             result += f"\n---\n\n### 💡 Interpretasi:\n"
 
             if max_prob >= 0.8:
                 result += (
-                    "🔥 *Sangat Yakin* - Model sangat confident dengan prediksi ini!"
+                    "🔥 **Sangat Yakin** - Model sangat confident dengan prediksi ini!"
                 )
             elif max_prob >= 0.6:
-                result += "✅ *Yakin* - Model cukup confident dengan prediksi ini."
+                result += "✅ **Yakin** - Model cukup confident dengan prediksi ini."
             elif max_prob >= 0.4:
                 result += (
-                    "⚠️ *Cukup Yakin* - Ada beberapa kemungkinan personality type."
+                    "⚠️ **Cukup Yakin** - Ada beberapa kemungkinan personality type."
                 )
             else:
                 result += (
-                    "❓ *Kurang Yakin* - Hasil prediksi tidak terlalu conclusive."
+                    "❓ **Kurang Yakin** - Hasil prediksi tidak terlalu conclusive."
                 )
 
             # Tambahkan tips berdasarkan personality
@@ -211,14 +259,14 @@ class PersonalityClassifierApp:
 
             # Update status
             status_update = (
-                f"✅ *Status:* Prediksi selesai - {personality_type} ({max_prob:.1%})"
+                f"✅ **Status:** Prediksi selesai - {personality_type} ({max_prob:.1%})"
             )
 
             return result, plot_data, True, status_update
 
         except Exception as e:
             error_msg = f"❌ Error dalam prediksi: {str(e)}"
-            error_status = "❌ *Status:* Error dalam prediksi"
+            error_status = "❌ **Status:** Error dalam prediksi"
             # Return empty dataframe for error case
             empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
             return error_msg, empty_df, False, error_status
@@ -287,7 +335,7 @@ def create_interface():
             """
         # 🧠 Personality Classifier
         
-        *Prediksi tipe personality berdasarkan karakteristik dan perilaku Anda!*
+        **Prediksi tipe personality berdasarkan karakteristik dan perilaku Anda!**
         
         Aplikasi ini menggunakan model Random Forest yang telah dilatih untuk memprediksi tipe personality 
         berdasarkan berbagai faktor seperti kebiasaan sosial, dan preferensi pribadi.
@@ -363,47 +411,26 @@ def create_interface():
                     "🔮 Prediksi Personality", variant="primary", size="lg"
                 )
 
-                # Tambahkan tombol contoh
-                gr.Markdown("### 🎲 Coba Contoh:")
-                example_btn = gr.Button(
-                    "📝 Isi Contoh Data", variant="secondary", size="sm"
-                )
-
         with gr.Row():
-            with gr.Column(scale=2):
+            with gr.Column(scale=3):
                 result_output = gr.Markdown(
                     label="📊 Hasil Prediksi",
                     value="""
+                    
 ## 🎯 Personality Prediction Ready!
 
-Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol *🔮 Prediksi Personality* untuk melihat hasil analisis personality Anda.
+Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **🔮 Prediksi Personality** untuk melihat hasil analisis personality Anda.
 
 ### ✨ Fitur yang akan Anda dapatkan:
-- 🎯 *Prediksi Akurat* dengan confidence score
-- 📊 *Visualisasi* confidence untuk setiap tipe personality  
-- 💡 *Interpretasi* hasil prediksi
-- 🎭 *Penjelasan* karakteristik personality Anda
-- 📈 *Progress bar* visual untuk setiap kemungkinan
+- 🎯 **Prediksi Akurat** dengan confidence score
+- 📊 **Visualisasi** confidence untuk setiap tipe personality  
+- 💡 **Interpretasi** hasil prediksi
+- 🎭 **Penjelasan** karakteristik personality Anda
+- 📈 **Progress bar** visual untuk setiap kemungkinan
 
-*Siap untuk mengetahui personality Anda?* 🚀
+**Siap untuk mengetahui personality Anda?** 🚀
                     """,
                     elem_id="result_output",
-                )
-
-            with gr.Column(scale=1):
-                # Status indicator
-                status_indicator = gr.Markdown(
-                    value="⏳ *Status:* Siap untuk prediksi", visible=True
-                )
-
-                # Tambahkan komponen untuk visualisasi confidence
-                confidence_plot = gr.BarPlot(
-                    title="📊 Confidence Scores",
-                    x_title="Personality Type",
-                    y_title="Confidence (%)",
-                    width=400,
-                    height=300,
-                    visible=False,
                 )
 
             with gr.Column():
@@ -411,11 +438,11 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol *🔮
                     """
                 ### 📚 Tentang Model
                 
-                *Model:* Random Forest Classifier  
-                *Features:* 7 fitur input  
-                *Akurasi:* Lihat file Results/metrics.txt  
+                **Model:** Random Forest Classifier  
+                **Features:** 7 fitur input  
+                **Akurasi:** Lihat file `Results/metrics.txt`  
                 
-                *Fitur yang digunakan:*
+                **Fitur yang digunakan:**
                 - Waktu sendirian (jam/hari)
                 - Takut tampil di depan umum
                 - Kehadiran acara sosial (0-10)
@@ -424,32 +451,23 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol *🔮
                 - Ukuran lingkaran pertemanan
                 - Frekuensi posting media sosial (1-10)
                 
-                *Format Model:* Skops (.skops)  
-                *Deployment:* Hugging Face Spaces
+                **Format Model:** Skops (.skops)  
+                **Deployment:** Hugging Face Spaces
                 """
                 )
 
         # Event handler untuk prediksi dengan loading state
         def predict_with_loading(*inputs):
             # Update status ke loading
-            yield [
-                "🔄 *Sedang memproses prediksi...*\n\nMohon tunggu sebentar...",
-                None,
-                "🔄 *Status:* Sedang memproses...",
-            ]
+            yield "🔄 **Sedang memproses prediksi...**\n\nMohon tunggu sebentar..."
 
             # Jalankan prediksi
             result_text, plot_data, plot_visible, status_text = app.predict_personality(
                 *inputs
             )
 
-            # Update confidence plot visibility dengan mengupdate data
-            if plot_visible and plot_data is not None:
-                yield [result_text, plot_data, status_text]
-            else:
-                # Return empty dataframe for plot when no data
-                empty_df = pd.DataFrame({"Personality": [], "Confidence": []})
-                yield [result_text, empty_df, status_text]
+            # Return hasil prediksi
+            yield result_text
 
         predict_btn.click(
             fn=predict_with_loading,
@@ -462,43 +480,19 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol *🔮
                 friends_circle,
                 post_frequency,
             ],
-            outputs=[result_output, confidence_plot, status_indicator],
+            outputs=[result_output],
         )
 
-        # Event handler untuk contoh data
-        def fill_example_data():
-            return [
-                6.0,  # time_alone
-                "No",  # stage_fear
-                7,  # social_events
-                8,  # going_outside
-                "No",  # drained_socializing
-                12,  # friends_circle
-                6,  # post_frequency
-            ]
-
-        example_btn.click(
-            fn=fill_example_data,
-            outputs=[
-                time_alone,
-                stage_fear,
-                social_events,
-                going_outside,
-                drained_socializing,
-                friends_circle,
-                post_frequency,
-            ],
-        )
 
         gr.Markdown(
             """
         ---
         ### 🔗 Links
-        - *GitHub Repository:* [Firmnm/Tugas-1-MLOps](https://github.com/Firmnm/Tugas-1-MLOps)
-        - *Model Format:* Skops (scikit-learn compatible)
-        - *Framework:* Gradio + Hugging Face Spaces
+        - **GitHub Repository:** [Firmnm/Tugas-1-MLOps](https://github.com/Firmnm/Tugas-1-MLOps)
+        - **Model Format:** Skops (scikit-learn compatible)
+        - **Framework:** Gradio + Hugging Face Spaces
         
-        Dibuat untuk keperluan pembelajaran MLOps
+        *Dibuat untuk memenuhi Tugas 1 MLOps - Machine Learning Operations*
         """
         )
 
@@ -506,22 +500,13 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol *🔮
 
 
 if __name__ == "__main__":
-    # Membuat dan menjalankan interface
-    print("🚀 Memulai Personality Classifier App...")
+    print("🚀 Launching Personality Classifier App on Hugging Face Spaces...")
+    
     demo = create_interface()
 
-    print("🌐 Aplikasi akan tersedia di:")
-    print("- Local: http://localhost:7861")
-    print("- Network: http://0.0.0.0:7861")
-
-    try:
-        demo.launch(server_name="0.0.0.0", server_port=7861, share=True, show_api=False)
-    except Exception as e:
-        print(f"❌ Error launching app: {e}")
-        print("🔄 Trying with a different port...")
-        demo.launch(
-            server_name="0.0.0.0",
-            server_port=0,  # Auto-select available port
-            share=True,
-            show_api=False,
-        )
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        share=False,
+        show_api=False,
+    )
