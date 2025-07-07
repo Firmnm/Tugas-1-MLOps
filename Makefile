@@ -25,7 +25,7 @@ update-branch:
 	git config user.email "$(USER_EMAIL)"
 	git add Results/ Model/ report.md
 	git commit -m "Update: training and evaluation results" || echo "Nothing to commit"
-	git push origin Firman
+	git push --force origin HEAD:update || echo "Nothing to push"
 
 deploy:
 	@echo "Deploying to Hugging Face Spaces..."
@@ -52,13 +52,53 @@ deploy:
 	@echo "✅ Deployment to Hugging Face Spaces completed!"
 
 run:
+	@echo "🚀 Starting Personality Classifier app..."
 	python App/app.py
 
-test-model:
-	@echo "Testing model loading..."
-	python -c "import skops.io as sio; from skops.io import get_untrusted_types; \
-	unknown_types = get_untrusted_types(file='Model/personality_classifier.skops'); \
-	model = sio.load('Model/personality_classifier.skops', trusted=unknown_types); \
-	print('✅ Model loaded successfully!')"
+# ========================
+# Docker Commands
+# ========================
 
-.PHONY: install format test train eval update-branch deploy run test-model clean
+docker-build:
+	@echo "🐳 Building Docker image..."
+	docker build -t personality-classifier:latest .
+
+docker-run:
+	@echo "🚀 Running Docker container..."
+	docker run -p 7860:7860 --name personality-app personality-classifier:latest
+
+docker-run-detached:
+	@echo "🚀 Running Docker container in background..."
+	docker run -d -p 7860:7860 --name personality-app personality-classifier:latest
+
+docker-stop:
+	@echo "⏹️ Stopping Docker container..."
+	docker stop personality-app || echo "Container not running"
+	docker rm personality-app || echo "Container not found"
+
+docker-compose-up:
+	@echo "🐳 Starting services with Docker Compose..."
+	docker-compose up -d
+
+docker-compose-down:
+	@echo "⏹️ Stopping Docker Compose services..."
+	docker-compose down
+
+docker-train:
+	@echo "🎯 Running training in Docker..."
+	docker-compose --profile training up mlops-training
+
+docker-clean:
+	@echo "🧹 Cleaning Docker resources..."
+	docker system prune -f
+
+help:
+	@echo "Available commands:"
+	@echo "  install          - Install dependencies"
+	@echo "  train            - Train the model"
+	@echo "  run              - Run app locally"
+	@echo "  docker-build     - Build Docker image"
+	@echo "  docker-run       - Run container"
+	@echo "  docker-compose-up - Start all services"
+
+.PHONY: install format train eval update-branch deploy run docker-build docker-run docker-compose-up help
