@@ -5,15 +5,6 @@ import skops.io as sio
 from skops.io import get_untrusted_types
 import os
 
-# Import untuk error handling
-try:
-    import httpx
-    import httpcore
-    HTTPX_AVAILABLE = True
-except ImportError:
-    HTTPX_AVAILABLE = False
-
-
 class PersonalityClassifierApp:
     def __init__(self):
         """Inisialisasi aplikasi personality classifier"""
@@ -505,8 +496,8 @@ if __name__ == "__main__":
     demo = create_interface()
 
     demo.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
-        share=False,
-        show_api=False,
-    )
+    server_name="127.0.0.1",
+    server_port=7860,
+    share=False,
+    show_api=False,
+)
