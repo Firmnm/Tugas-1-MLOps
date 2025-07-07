@@ -1,0 +1,27 @@
+name: Continuous Deployment
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deployment To Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        run: |
+          echo "Starting deployment with HF token..."
+          echo "Token exists: $(if [ -n "$HF_TOKEN" ]; then echo "YES"; else echo "NO"; fi)"
+          echo "User: $USER_NAME <$USER_EMAIL>"
+          make deploy HF_TOKEN="$HF_TOKEN" USER_NAME="$USER_NAME" USER_EMAIL="$USER_EMAIL"
