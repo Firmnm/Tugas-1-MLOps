@@ -5,47 +5,23 @@ on:
     workflows: ["Continuous Integration"]
     types:
       - completed
-    branches: ["Firman"]
   workflow_dispatch:
 
-permissions: 
-  contents: write
-  actions: read
-
 jobs:
-  cd:
-    name: Continuous Deployment
+  build:
     runs-on: ubuntu-latest
-    if: |
-      github.event.workflow_run.conclusion == 'success' && 
-      github.event.workflow_run.head_branch == 'Firman'
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     steps:
-      - name: Debug Workflow Run Info
-        run: |
-          echo "Workflow run conclusion: ${{ github.event.workflow_run.conclusion }}"
-          echo "Workflow run branch: ${{ github.event.workflow_run.head_branch }}"
-          echo "Workflow run event: ${{ github.event_name }}"
-          
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/checkout@v3
 
-      - name: Check Required Secrets
-        run: |
-          echo "Checking required secrets..."
-          if [ -z "${{ secrets.HF_TOKEN }}" ]; then
-            echo "❌ HF_TOKEN secret is not set!"
-            exit 1
-          fi
-          echo "✅ All required secrets are configured"
-
-      - name: Deploy to Hugging Face
+      - name: Deployment To Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
         run: |
-          echo "Starting deployment..."
+          echo "Starting deployment with HF token..."
+          echo "Token exists: $(if [ -n "$HF_TOKEN" ]; then echo "YES"; else echo "NO"; fi)"
+          echo "User: $USER_NAME <$USER_EMAIL>"
           make deploy HF_TOKEN="$HF_TOKEN" USER_NAME="$USER_NAME" USER_EMAIL="$USER_EMAIL"
