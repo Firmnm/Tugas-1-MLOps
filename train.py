@@ -2,10 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     classification_report,
     confusion_matrix,
@@ -19,7 +18,7 @@ import warnings
 
 # Import skops untuk menyimpan model yang kompatibel dengan Hugging Face Spaces
 import skops.io as sio
-from skops.io import dump, load, get_untrusted_types
+from skops.io import get_untrusted_types
 
 warnings.filterwarnings("ignore")
 
@@ -305,7 +304,7 @@ class PersonalityClassifier:
         # Test loading untuk memastikan model dapat dimuat dengan benar
         print("Menguji loading model...")
         try:
-            loaded_model = sio.load(
+            sio.load(
                 "Model/personality_classifier.skops", trusted=unknown_types
             )
             print("✓ Model berhasil dimuat dan siap untuk deployment!")
