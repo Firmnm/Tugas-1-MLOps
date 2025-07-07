@@ -5,6 +5,7 @@ import skops.io as sio
 from skops.io import get_untrusted_types
 import os
 
+
 class PersonalityClassifierApp:
     def __init__(self):
         """Inisialisasi aplikasi personality classifier"""
