@@ -5,17 +5,21 @@ on:
     workflows: ["Continuous Integration"]
     types:
       - completed
-    branches: ["Firman"]
   workflow_dispatch:
 
 permissions: 
   contents: write
   actions: read
+  checks: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    if: |
+      (github.event_name == 'workflow_run' && 
+       github.event.workflow_run.conclusion == 'success' && 
+       github.event.workflow_run.head_branch == 'Firman') ||
+      github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Debug Workflow Run Info
