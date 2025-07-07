@@ -52,13 +52,8 @@ deploy:
 	@echo "✅ Deployment to Hugging Face Spaces completed!"
 
 run:
+	@echo "🚀 Starting Personality Classifier app..."
 	python App/app.py
 
-test-model:
-	@echo "Testing model loading..."
-	python -c "import skops.io as sio; from skops.io import get_untrusted_types; \
-	unknown_types = get_untrusted_types(file='Model/personality_classifier.skops'); \
-	model = sio.load('Model/personality_classifier.skops', trusted=unknown_types); \
-	print('✅ Model loaded successfully!')"
 
-.PHONY: install format test train eval update-branch deploy run test-model clean
+.PHONY: install format train eval update-branch deploy run
