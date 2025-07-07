@@ -25,7 +25,11 @@ update-branch:
 	git config user.email "$(USER_EMAIL)"
 	git add Results/ Model/ report.md
 	git commit -m "Update: training and evaluation results" || echo "Nothing to commit"
+<<<<<<< HEAD
 	git push origin Shofy
+=======
+	git push --force origin HEAD:update || echo "Nothing to push"
+>>>>>>> 70a28d5f319b2d0d7849e4fcb940a0eacc57413a
 
 deploy:
 	@echo "Deploying to Hugging Face Spaces..."
@@ -52,13 +56,8 @@ deploy:
 	@echo "✅ Deployment to Hugging Face Spaces completed!"
 
 run:
+	@echo "🚀 Starting Personality Classifier app..."
 	python App/app.py
 
-test-model:
-	@echo "Testing model loading..."
-	python -c "import skops.io as sio; from skops.io import get_untrusted_types; \
-	unknown_types = get_untrusted_types(file='Model/personality_classifier.skops'); \
-	model = sio.load('Model/personality_classifier.skops', trusted=unknown_types); \
-	print('✅ Model loaded successfully!')"
 
-.PHONY: install format test train eval update-branch deploy run test-model clean
+.PHONY: install format train eval update-branch deploy run
