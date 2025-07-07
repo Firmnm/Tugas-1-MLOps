@@ -7,6 +7,134 @@ This guide explains how to build and run the Personality Classifier MLOps applic
 - Docker installed on your system
 - Docker Compose (optional, for easier management)
 
+## Manual Docker Steps (Detailed)
+
+### Step 1: Navigate to Project Directory
+```bash
+# Windows
+cd e:\KULIAH\Semester Antara\Projek\Tugas-1-MLOps
+
+# Linux/Mac
+cd /path/to/Tugas-1-MLOps
+```
+
+### Step 2: Build Docker Image
+```bash
+# Build the Docker image with tag
+docker build -t personality-classifier:latest .
+
+# Build with specific tag and no cache (for clean build)
+docker build --no-cache -t personality-classifier:v1.0 .
+
+# Build and show detailed output
+docker build --progress=plain -t personality-classifier:latest .
+```
+
+### Step 3: Verify Image Creation
+```bash
+# List Docker images
+docker images
+
+# Check specific image
+docker images personality-classifier
+```
+
+### Step 4: Run Container
+```bash
+# Run container in detached mode
+docker run -d --name personality-app -p 7860:7860 personality-classifier:latest
+
+# Run with custom name and port
+docker run -d --name my-personality-app -p 8080:7860 personality-classifier:latest
+
+# Run with environment variables
+docker run -d --name personality-app -p 7860:7860 \
+  -e GRADIO_SERVER_NAME=0.0.0.0 \
+  -e GRADIO_SERVER_PORT=7860 \
+  personality-classifier:latest
+
+# Run in interactive mode (for debugging)
+docker run -it --name personality-app -p 7860:7860 personality-classifier:latest
+```
+
+### Step 5: Verify Container is Running
+```bash
+# Check running containers
+docker ps
+
+# Check all containers (running and stopped)
+docker ps -a
+
+# Check container status
+docker inspect personality-app
+```
+
+### Step 6: Access Application
+Open your web browser and go to:
+- http://localhost:7860 (if using default port)
+- http://localhost:8080 (if using custom port 8080)
+
+### Step 7: Monitor Container
+```bash
+# View container logs
+docker logs personality-app
+
+# Follow logs in real-time
+docker logs -f personality-app
+
+# View last 50 lines of logs
+docker logs --tail 50 personality-app
+
+# Check container resource usage
+docker stats personality-app
+```
+
+### Step 8: Container Management Commands
+```bash
+# Stop container
+docker stop personality-app
+
+# Start stopped container
+docker start personality-app
+
+# Restart container
+docker restart personality-app
+
+# Pause container
+docker pause personality-app
+
+# Unpause container
+docker unpause personality-app
+
+# Access container shell
+docker exec -it personality-app /bin/bash
+
+# Copy files from container
+docker cp personality-app:/app/logs ./local-logs
+
+# Copy files to container
+docker cp ./local-file.txt personality-app:/app/
+```
+
+### Step 9: Cleanup
+```bash
+# Stop and remove container
+docker stop personality-app
+docker rm personality-app
+
+# Remove container forcefully
+docker rm -f personality-app
+
+# Remove image
+docker rmi personality-classifier:latest
+
+# Clean up unused containers and images
+docker system prune
+
+# Clean up everything including volumes
+docker system prune -a --volumes
+```
+
 ## Quick Start
 
 ### Option 1: Using Docker Compose (Recommended)
