@@ -5,6 +5,28 @@ import skops.io as sio
 from skops.io import get_untrusted_types
 import os
 
+# Configuration for server based on environment
+def get_server_config():
+    """Get server configuration based on environment"""
+    # Check if running in Docker
+    is_docker = (
+        os.path.exists('/.dockerenv') or 
+        os.environ.get('DOCKER_CONTAINER', 'false').lower() == 'true'
+    )
+    
+    if is_docker:
+        # Docker environment - use 0.0.0.0 to allow external access
+        server_name = os.environ.get('GRADIO_SERVER_NAME', '0.0.0.0')
+        server_port = int(os.environ.get('GRADIO_SERVER_PORT', 7860))
+        print(f"🐳 Running in Docker - Server: {server_name}:{server_port}")
+    else:
+        # Local development - use 127.0.0.1 for security
+        server_name = os.environ.get('GRADIO_SERVER_NAME', '127.0.0.1')
+        server_port = int(os.environ.get('GRADIO_SERVER_PORT', 7860))
+        print(f"💻 Running locally - Server: {server_name}:{server_port}")
+    
+    return server_name, server_port
+
 
 class PersonalityClassifierApp:
     def __init__(self):
@@ -492,13 +514,16 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
 
 
 if __name__ == "__main__":
-    print("🚀 Launching Personality Classifier App on Hugging Face Spaces...")
+    print("🚀 Launching Personality Classifier App...")
+    
+    # Get server configuration based on environment
+    server_name, server_port = get_server_config()
     
     demo = create_interface()
 
     demo.launch(
-    server_name="127.0.0.1",
-    server_port=7860,
-    share=False,
-    show_api=False,
-)
+        server_name=server_name,
+        server_port=server_port,
+        share=False,
+        show_api=False,
+    )
