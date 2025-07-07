@@ -2,9 +2,9 @@ name: Continuous Integration
 
 on:
   push:
-    branches: ["Firman"]
+    branches: ["main"]
   pull_request:
-    branches: ["Firman"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions: write-all
