@@ -5,13 +5,28 @@ import skops.io as sio
 from skops.io import get_untrusted_types
 import os
 
-# Import untuk error handling
-try:
-    import httpx
-    import httpcore
-    HTTPX_AVAILABLE = True
-except ImportError:
-    HTTPX_AVAILABLE = False
+
+# Configuration for server based on environment
+def get_server_config():
+    """Get server configuration based on environment"""
+    # Check if running in Docker
+    is_docker = (
+        os.path.exists("/.dockerenv")
+        or os.environ.get("DOCKER_CONTAINER", "false").lower() == "true"
+    )
+
+    if is_docker:
+        # Docker environment - use 0.0.0.0 to allow external access
+        server_name = os.environ.get("GRADIO_SERVER_NAME", "0.0.0.0")
+        server_port = int(os.environ.get("GRADIO_SERVER_PORT", 7860))
+        print(f"🐳 Running in Docker - Server: {server_name}:{server_port}")
+    else:
+        # Local development - use 127.0.0.1 for security
+        server_name = os.environ.get("GRADIO_SERVER_NAME", "127.0.0.1")
+        server_port = int(os.environ.get("GRADIO_SERVER_PORT", 7860))
+        print(f"💻 Running locally - Server: {server_name}:{server_port}")
+
+    return server_name, server_port
 
 
 class PersonalityClassifierApp:
@@ -30,27 +45,31 @@ class PersonalityClassifierApp:
             # Menentukan base path untuk model files
             base_path = os.path.dirname(os.path.abspath(__file__))
             parent_path = os.path.dirname(base_path)
-            
+
             # Mencoba beberapa lokasi untuk file model
             possible_paths = [
                 "Model/personality_classifier.skops",  # Local development
-                os.path.join(parent_path, "Model/personality_classifier.skops"),  # Relative to App folder
+                os.path.join(
+                    parent_path, "Model/personality_classifier.skops"
+                ),  # Relative to App folder
                 "./Model/personality_classifier.skops",  # Current directory
-                "personality_classifier.skops"  # Hugging Face Spaces root
+                "personality_classifier.skops",  # Hugging Face Spaces root
             ]
-            
+
             model_path = None
             for path in possible_paths:
                 if os.path.exists(path):
                     model_path = path
                     break
-            
+
             if model_path:
                 unknown_types = get_untrusted_types(file=model_path)
                 self.model = sio.load(model_path, trusted=unknown_types)
                 print(f"✅ Model berhasil dimuat dari: {model_path}")
             else:
-                print(f"❌ File model tidak ditemukan di lokasi manapun: {possible_paths}")
+                print(
+                    f"❌ File model tidak ditemukan di lokasi manapun: {possible_paths}"
+                )
                 return False
 
             # Memuat label encoder
@@ -58,21 +77,23 @@ class PersonalityClassifierApp:
                 "Model/label_encoder.skops",
                 os.path.join(parent_path, "Model/label_encoder.skops"),
                 "./Model/label_encoder.skops",
-                "label_encoder.skops"
+                "label_encoder.skops",
             ]
-            
+
             encoder_path = None
             for path in encoder_possible_paths:
                 if os.path.exists(path):
                     encoder_path = path
                     break
-            
+
             if encoder_path:
                 unknown_types = get_untrusted_types(file=encoder_path)
                 self.label_encoder = sio.load(encoder_path, trusted=unknown_types)
                 print(f"✅ Label encoder berhasil dimuat dari: {encoder_path}")
             else:
-                print(f"❌ File label encoder tidak ditemukan di lokasi manapun: {encoder_possible_paths}")
+                print(
+                    f"❌ File label encoder tidak ditemukan di lokasi manapun: {encoder_possible_paths}"
+                )
                 return False
 
             # Memuat feature names
@@ -80,22 +101,24 @@ class PersonalityClassifierApp:
                 "Model/feature_names.skops",
                 os.path.join(parent_path, "Model/feature_names.skops"),
                 "./Model/feature_names.skops",
-                "feature_names.skops"
+                "feature_names.skops",
             ]
-            
+
             features_path = None
             for path in features_possible_paths:
                 if os.path.exists(path):
                     features_path = path
                     break
-            
+
             if features_path:
                 unknown_types = get_untrusted_types(file=features_path)
                 self.feature_names = sio.load(features_path, trusted=unknown_types)
                 print(f"✅ Feature names berhasil dimuat dari: {features_path}")
                 print(f"Features: {self.feature_names}")
             else:
-                print(f"❌ File feature names tidak ditemukan di lokasi manapun: {features_possible_paths}")
+                print(
+                    f"❌ File feature names tidak ditemukan di lokasi manapun: {features_possible_paths}"
+                )
                 return False
 
             return True
@@ -173,7 +196,6 @@ class PersonalityClassifierApp:
 
             # Format hasil yang lebih menarik
             max_prob = max(probabilities)
-            max_class = classes[np.argmax(probabilities)]
 
             # Emoji berdasarkan personality type
             personality_emoji = {"Extrovert": "🌟", "Introvert": "🤔", "Ambivert": "⚖️"}
@@ -206,7 +228,7 @@ class PersonalityClassifierApp:
                 result += f"`{bar}` {prob_value:.1%}\n"
 
             # Tambahkan interpretasi hasil
-            result += f"\n---\n\n### 💡 Interpretasi:\n"
+            result += "\n---\n\n### 💡 Interpretasi:\n"
 
             if max_prob >= 0.8:
                 result += (
@@ -483,7 +505,6 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
             outputs=[result_output],
         )
 
-
         gr.Markdown(
             """
         ---
@@ -500,13 +521,16 @@ Masukkan data pribadi Anda pada form di sebelah kiri, kemudian klik tombol **�
 
 
 if __name__ == "__main__":
-    print("🚀 Launching Personality Classifier App on Hugging Face Spaces...")
-    
+    print("🚀 Launching Personality Classifier App...")
+
+    # Get server configuration based on environment
+    server_name, server_port = get_server_config()
+
     demo = create_interface()
 
     demo.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
+        server_name=server_name,
+        server_port=server_port,
         share=False,
         show_api=False,
     )
