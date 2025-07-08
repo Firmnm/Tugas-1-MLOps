@@ -1,10 +1,3 @@
-/*
-* 225150207111017 Farhan Rahmansyah
-* 225150200111001 Firman Maulana
-* 225150200111009 Lucas Chandra
-* 225150207111002 Shofy Pramesti Putri Guruh
-*/
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
