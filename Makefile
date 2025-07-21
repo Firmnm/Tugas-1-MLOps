@@ -92,12 +92,61 @@ docker-clean:
 	@echo "🧹 Cleaning Docker resources..."
 	docker system prune -f
 
+# ========================
+# MLOps Commands
+# ========================
+
+drift-detect:
+	@echo "🔍 Running data drift detection..."
+	python data_drift.py
+
+monitoring:
+	@echo "📊 Starting MLOps monitoring..."
+	python monitoring.py
+
+mlflow-server:
+	@echo "🚀 Starting MLflow tracking server..."
+	mlflow server --host 0.0.0.0 --port 5000
+
+full-pipeline:
+	@echo "🚀 Running complete MLOps pipeline..."
+	python train.py
+	python data_drift.py
+	python monitoring.py
+
+test-mlops:
+	@echo "🧪 Running MLOps test suite..."
+	python test_mlops.py
+
+# ========================
+# Monitoring Infrastructure
+# ========================
+
+start-monitoring-stack:
+	@echo "🚀 Starting complete monitoring stack..."
+	docker-compose up -d mlflow prometheus grafana
+
+stop-monitoring-stack:
+	@echo "⏹️ Stopping monitoring stack..."
+	docker-compose down
+
+monitoring-logs:
+	@echo "📋 Showing monitoring logs..."
+	docker-compose logs -f mlflow prometheus grafana
+
 help:
 	@echo "Available commands:"
-	@echo "  install          - Install dependencies"
-	@echo "  train            - Train the model"
-	@echo "  run              - Run app locally"
-	@echo "  docker-build     - Build Docker image"
+	@echo "  install              - Install dependencies"
+	@echo "  train                - Train the model"
+	@echo "  run                  - Run app locally"
+	@echo "  drift-detect         - Run data drift detection"
+	@echo "  monitoring           - Start MLOps monitoring"
+	@echo "  mlflow-server        - Start MLflow server"
+	@echo "  full-pipeline        - Run complete MLOps pipeline"
+	@echo "  test-mlops           - Run MLOps test suite"
+	@echo "  start-monitoring-stack - Start monitoring infrastructure"
+	@echo "  stop-monitoring-stack  - Stop monitoring infrastructure"
+	@echo "  docker-build         - Build Docker image"
 	@echo "  docker-run       - Run container"
 	@echo "  docker-compose-up - Start all services"
 

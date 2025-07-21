@@ -11,37 +11,45 @@ ENV GRADIO_SERVER_NAME=0.0.0.0
 ENV GRADIO_SERVER_PORT=7860
 ENV DOCKER_CONTAINER=true
 
-# Install system dependencies including curl for health check
+# Install system dependencies including git and curl for DVC and health check
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better Docker layer caching
+# Setup git config for DVC (will be overridden by container setup)
+RUN git config --global user.email "mlops@container.local" && \
+    git config --global user.name "MLOps Container"
+
+# Copy requirements file first
 COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Create necessary directories if they don't exist
+# Create necessary directories
 RUN mkdir -p Model Data Results App
 
-# Copy application code
+# Copy all application code into the container
 COPY . .
 
-# Create non-root user for security
+# Tambahkan permission untuk entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+# Tambahkan user non-root
 RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app
 USER appuser
 
-# Expose the port that Gradio runs on
+# Expose Gradio port
 EXPOSE 7860
 
-# Health check - using Gradio's root endpoint with longer start period
+# Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:7860/ || exit 1
 
-# Command to run the application
-CMD ["python", "App/app.py"]
+# Run entrypoint script (data generator + app)
+CMD ["./entrypoint.sh"]

@@ -1,0 +1,25 @@
+{
+  "model_info": {
+    "type": "RandomForestClassifier",
+    "n_features": 7,
+    "target_classes": [
+      "Extrovert",
+      "Introvert"
+    ],
+    "created_at": "2025-07-20T19:42:30.470645"
+  },
+  "data_info": {
+    "version": "local",
+    "loaded_at": "2025-07-20T19:42:21.934660",
+    "source": "local_file",
+    "path": "Data/personality_datasert.csv",
+    "dvc_tracked": true
+  },
+  "training_config": {
+    "use_dvc": true,
+    "dvc_version": null,
+    "retrain": true,
+    "test_size": 0.2,
+    "random_state": 42
+  }
+}
