@@ -1,5 +1,5 @@
 outs:
-- md5: 220c67bf2dbd4195842821e4b985a81c
-  size: 342089
+- md5: eea316ff1902a4eb8eeb2b4140dcd183
+  size: 46703
   hash: md5
   path: synthetic_ctgan_data.csv
