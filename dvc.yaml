@@ -1,15 +1,4 @@
 stages:
-  prepare_data:
-    cmd: echo "Data preparation stage"
-    deps:
-    - Data/personality_datasert.csv
-    - Data/synthetic_ctgan_data.csv
-    outs:
-    - Data/personality_datasert.csv:
-        cache: true
-    - Data/synthetic_ctgan_data.csv:
-        cache: true
-
   train_model:
     cmd: python train.py
     deps:
