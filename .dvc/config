@@ -1,0 +1,13 @@
+[core]
+    remote = minio_remote
+
+['remote "gdrive_remote"']
+    url = gdrive://1ZraXpPHKRaderVWn3KGNxSqibbTUv1zn
+    gdrive_use_service_account = true
+    gdrive_service_account_json_file_path = ../credential/etl-project-459604-6518fb0b17d1.json
+
+['remote "minio_remote"']
+    url = s3://dvc-bucket
+    endpointurl = http://localhost:9000
+    region = us-east-1
+

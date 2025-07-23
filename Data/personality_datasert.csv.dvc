@@ -1,0 +1,5 @@
+outs:
+- md5: c94b2fb6105be79e249ac032f46e8e6c
+  size: 115122
+  hash: md5
+  path: personality_datasert.csv
