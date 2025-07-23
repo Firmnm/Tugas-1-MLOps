@@ -9,14 +9,11 @@ scikit-learn>=1.3.0
 matplotlib>=3.6.0
 seaborn>=0.12.0
 
-# MLflow for experiment tracking with S3 support
+# MLflow for experiment tracking
 mlflow>=2.5.0
-boto3>=1.28.0
-botocore>=1.31.0
 
-# Data Version Control with S3 support
-dvc[s3]>=3.0.0
-s3fs>=2023.6.0
+# Data Version Control
+dvc>=3.0.0
 
 # Model serialization
 skops>=0.8.0
@@ -37,11 +34,5 @@ requests>=2.28.0
 prometheus-client>=0.16.0
 psutil>=5.9.0
 
-# API Framework (for retrain API)
-fastapi>=0.116.1
-uvicorn[standard]>=0.29.0
-pydantic>=2.9.2
-aiofiles>=23.2.1
-
-# Testing
-pytest>=8.2.2
+fastapi
+uvicorn[standard]

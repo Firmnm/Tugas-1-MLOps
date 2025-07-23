@@ -11,17 +11,12 @@ ENV GRADIO_SERVER_NAME=0.0.0.0
 ENV GRADIO_SERVER_PORT=7860
 ENV DOCKER_CONTAINER=true
 
-# Install system dependencies including git and curl for DVC and health check
+# Install system dependencies including curl for health check
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     curl \
-    git \
     && rm -rf /var/lib/apt/lists/*
-
-# Setup git config for DVC (will be overridden by container setup)
-RUN git config --global user.email "mlops@container.local" && \
-    git config --global user.name "MLOps Container"
 
 # Copy requirements file first
 COPY requirements.txt .

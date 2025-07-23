@@ -1,40 +1,6 @@
+version: '3.9'
+
 services:
-  # MinIO S3-compatible storage untuk DVC
-  minio:
-    image: minio/minio:latest
-    container_name: minio-storage
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      - MINIO_ACCESS_KEY=minioadmin
-      - MINIO_SECRET_KEY=minioadmin
-    volumes:
-      - minio-data:/data
-    command: server /data --console-address ":9001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-
-  # MinIO Client untuk setup bucket
-  minio-init:
-    image: minio/mc:latest
-    container_name: minio-init
-    depends_on:
-      - minio
-    entrypoint: >
-      /bin/sh -c "
-      until mc alias set myminio http://minio:9000 minioadmin minioadmin; do
-        echo 'Waiting for MinIO...'
-        sleep 1
-      done;
-      mc mb myminio/dvc-storage --ignore-existing;
-      mc mb myminio/mlflow-artifacts --ignore-existing;
-      echo 'MinIO buckets created successfully'
-      "
-
   # App dengan monitoring dan antarmuka
   mlops-app:
     build: .
@@ -47,30 +13,16 @@ services:
       - ./Model:/app/Model
       - ./Results:/app/Results
       - ./mlruns:/app/mlruns
-      - ./.dvc:/app/.dvc
-      - ./.git:/app/.git
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
-      - DVC_REMOTE_URL=s3://dvc-storage/
-      - AWS_ACCESS_KEY_ID=minioadmin
-      - AWS_SECRET_ACCESS_KEY=minioadmin
-      - AWS_ENDPOINT_URL=http://minio:9000
     command: >
-      sh -c "
-      echo '🔧 Setting up DVC remote...' &&
-      dvc remote add -d minio s3://dvc-storage/ -f &&
-      dvc remote modify minio endpointurl http://minio:9000 &&
-      dvc remote modify minio access_key_id minioadmin &&
-      dvc remote modify minio secret_access_key minioadmin &&
-      echo '✅ DVC remote configured' &&
-      python monitoring.py &
-      python App/app.py"
+      sh -c "python monitoring.py &
+             python App/app.py"
     depends_on:
       - mlflow
       - prometheus
-      - minio-init
 
-  # MLflow Tracking Server dengan MinIO artifact store
+  # MLflow Tracking Server
   mlflow:
     image: python:3.11.13-slim
     container_name: mlflow-server
@@ -78,17 +30,10 @@ services:
       - "5000:5000"
     volumes:
       - ./mlruns:/mlruns
-    environment:
-      - AWS_ACCESS_KEY_ID=minioadmin
-      - AWS_SECRET_ACCESS_KEY=minioadmin
-      - AWS_ENDPOINT_URL=http://minio:9000
+      - ./artifacts:/artifacts
     command: >
-      sh -c "pip install mlflow[extras] boto3 &&
-             mlflow server --host 0.0.0.0 --port 5000 
-             --backend-store-uri file:///mlruns 
-             --default-artifact-root s3://mlflow-artifacts/"
-    depends_on:
-      - minio-init
+      sh -c "pip install mlflow[extras] &&
+             mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri file:///mlruns --default-artifact-root file:///artifacts"
 
   # Prometheus untuk monitoring
   prometheus:
@@ -121,41 +66,11 @@ services:
     depends_on:
       - prometheus
 
-  # API retrain otomatis saat data drift terdeteksi dengan fallback protection
+  # API retrain otomatis saat data drift terdeteksi
   retrain-api:
     build:
       context: .
-      dockerfile_inline: |
-        FROM python:3.11-slim
-        
-        WORKDIR /app
-        
-        # Install system dependencies
-        RUN apt-get update && apt-get install -y \
-            gcc \
-            g++ \
-            && rm -rf /var/lib/apt/lists/*
-        
-        # Copy requirements and install Python dependencies
-        COPY requirements.txt .
-        RUN pip install --no-cache-dir -r requirements.txt
-        
-        # Copy application code
-        COPY train.py retrain_api.py monitoring.py data_drift.py ./
-        COPY Data ./Data
-        COPY Model ./Model
-        COPY Results ./Results
-        
-        # Create necessary directories
-        RUN mkdir -p Data Model Results
-        
-        # Set environment variables
-        ENV PYTHONPATH=/app
-        ENV PYTHONUNBUFFERED=1
-        
-        # Default command for retrain API
-        CMD ["uvicorn", "retrain_api:app", "--host", "0.0.0.0", "--port", "8001"]
-    
+      dockerfile: Dockerfile.retrain
     container_name: retrain-api
     ports:
       - "8001:8001"
@@ -166,18 +81,9 @@ services:
       - ./mlruns:/app/mlruns
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
-      - RETRAIN_THRESHOLD=3.0
-      - BACKUP_MODEL=true
-      - FALLBACK_THRESHOLD=0.02
+    command: uvicorn retrain_api:app --host 0.0.0.0 --port 8001
     depends_on:
       - mlflow
-      - mlops-app
 
 volumes:
   grafana-storage:
-  minio-data:
-
-networks:
-  default:
-    name: monitoring-network
-
