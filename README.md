@@ -53,7 +53,7 @@ This project implements a full MLOps pipeline for personality classification bas
 
 ### 1. Clone Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/Firmnm/Tugas-1-MLOps.git
 cd Tugas-1-MLOps
 ```
 
