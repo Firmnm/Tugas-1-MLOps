@@ -1,0 +1,23 @@
+schema: '2.0'
+stages:
+  train_model:
+    cmd: python train.py
+    deps:
+    - path: Data/personality_datasert.csv
+      hash: md5
+      md5: c94b2fb6105be79e249ac032f46e8e6c
+      size: 115122
+    - path: train.py
+      hash: md5
+      md5: 8b6cbb11b448e58a06da77156805dd6f
+      size: 9986
+    outs:
+    - path: Model/personality_classifier.skops
+      hash: md5
+      md5: 91eb9860b57f31b51ed3fc3efa5eb727
+      size: 4412322
+    - path: Results
+      hash: md5
+      md5: f3d96615fcfee2ca0d976ca780337537.dir
+      size: 777807
+      nfiles: 3

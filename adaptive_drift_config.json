@@ -1,0 +1,700 @@
+{
+  "drift_cycle": 71,
+  "drift_history": [
+    {
+      "cycle": 0,
+      "timestamp": "2025-07-17T23:28:05.061971",
+      "drift_type": "input_drift",
+      "drift_strength": 0.1,
+      "new_samples": 800,
+      "total_size": 800,
+      "data_size": 800
+    },
+    {
+      "cycle": 1,
+      "timestamp": "2025-07-17T23:29:08.330900",
+      "drift_type": "label_drift",
+      "drift_strength": 0.1,
+      "new_samples": 200,
+      "total_size": 1000,
+      "data_size": 1000
+    },
+    {
+      "cycle": 2,
+      "timestamp": "2025-07-17T23:30:15.578998",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.12,
+      "new_samples": 200,
+      "total_size": 1200,
+      "data_size": 1200
+    },
+    {
+      "cycle": 3,
+      "timestamp": "2025-07-17T23:35:45.663862",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.144,
+      "new_samples": 150,
+      "total_size": 1350,
+      "data_size": 1350
+    },
+    {
+      "cycle": 4,
+      "timestamp": "2025-07-17T23:36:29.813158",
+      "drift_type": "input_drift",
+      "drift_strength": 0.17279999999999998,
+      "new_samples": 200,
+      "total_size": 1550,
+      "data_size": 1550
+    },
+    {
+      "cycle": 5,
+      "timestamp": "2025-07-17T23:37:58.631229",
+      "drift_type": "label_drift",
+      "drift_strength": 0.20735999999999996,
+      "new_samples": 200,
+      "total_size": 1750,
+      "data_size": 1750
+    },
+    {
+      "cycle": 6,
+      "timestamp": "2025-07-17T23:42:40.335247",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.24883199999999994,
+      "new_samples": 100,
+      "total_size": 1850,
+      "data_size": 1850
+    },
+    {
+      "cycle": 7,
+      "timestamp": "2025-07-18T00:27:42.879797",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.29859839999999993,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 8,
+      "timestamp": "2025-07-18T00:40:37.313561",
+      "drift_type": "input_drift",
+      "drift_strength": 0.3583180799999999,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 9,
+      "timestamp": "2025-07-18T01:18:28.569801",
+      "drift_type": "label_drift",
+      "drift_strength": 0.4299816959999999,
+      "new_samples": 200,
+      "total_size": 1200,
+      "data_size": 1200
+    },
+    {
+      "cycle": 10,
+      "timestamp": "2025-07-18T13:46:16.192726",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.5159780351999999,
+      "new_samples": 200,
+      "total_size": 1400,
+      "data_size": 1400
+    },
+    {
+      "cycle": 11,
+      "timestamp": "2025-07-18T13:57:36.208219",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.6191736422399998,
+      "new_samples": 200,
+      "total_size": 1600,
+      "data_size": 1600
+    },
+    {
+      "cycle": 12,
+      "timestamp": "2025-07-18T14:06:43.232577",
+      "drift_type": "input_drift",
+      "drift_strength": 0.7430083706879997,
+      "new_samples": 200,
+      "total_size": 1800,
+      "data_size": 1800
+    },
+    {
+      "cycle": 13,
+      "timestamp": "2025-07-18T14:17:28.045682",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 14,
+      "timestamp": "2025-07-18T14:27:03.828971",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 15,
+      "timestamp": "2025-07-18T14:37:47.897158",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 16,
+      "timestamp": "2025-07-18T14:48:19.508651",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 17,
+      "timestamp": "2025-07-18T14:59:01.102787",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 18,
+      "timestamp": "2025-07-18T15:09:36.969484",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 19,
+      "timestamp": "2025-07-18T15:19:39.414373",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 20,
+      "timestamp": "2025-07-18T20:56:19.623334",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 300,
+      "data_size": 300
+    },
+    {
+      "cycle": 21,
+      "timestamp": "2025-07-18T21:05:05.427848",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 450,
+      "data_size": 450
+    },
+    {
+      "cycle": 22,
+      "timestamp": "2025-07-18T21:10:32.553874",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 600,
+      "data_size": 600
+    },
+    {
+      "cycle": 23,
+      "timestamp": "2025-07-18T21:16:08.768296",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 750,
+      "data_size": 750
+    },
+    {
+      "cycle": 24,
+      "timestamp": "2025-07-18T21:21:37.820195",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 900,
+      "data_size": 900
+    },
+    {
+      "cycle": 25,
+      "timestamp": "2025-07-18T21:27:17.889938",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1050,
+      "data_size": 1050
+    },
+    {
+      "cycle": 26,
+      "timestamp": "2025-07-18T21:32:59.664697",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1200,
+      "data_size": 1200
+    },
+    {
+      "cycle": 27,
+      "timestamp": "2025-07-18T21:38:42.286597",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1350,
+      "data_size": 1350
+    },
+    {
+      "cycle": 28,
+      "timestamp": "2025-07-18T21:44:28.236108",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1500,
+      "data_size": 1500
+    },
+    {
+      "cycle": 29,
+      "timestamp": "2025-07-18T21:50:20.920652",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1650,
+      "data_size": 1650
+    },
+    {
+      "cycle": 30,
+      "timestamp": "2025-07-18T21:56:13.724228",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1800,
+      "data_size": 1800
+    },
+    {
+      "cycle": 31,
+      "timestamp": "2025-07-18T22:01:42.380240",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1950,
+      "data_size": 1950
+    },
+    {
+      "cycle": 32,
+      "timestamp": "2025-07-18T22:07:31.385561",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 33,
+      "timestamp": "2025-07-18T22:13:20.593163",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 34,
+      "timestamp": "2025-07-18T22:20:20.373549",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 35,
+      "timestamp": "2025-07-18T22:26:03.233986",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 36,
+      "timestamp": "2025-07-18T22:31:46.749267",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 37,
+      "timestamp": "2025-07-18T22:37:15.445092",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 38,
+      "timestamp": "2025-07-18T22:43:02.823977",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 39,
+      "timestamp": "2025-07-18T22:48:41.638023",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 40,
+      "timestamp": "2025-07-18T22:54:36.357365",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 41,
+      "timestamp": "2025-07-18T23:00:26.561225",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 42,
+      "timestamp": "2025-07-18T23:06:05.521535",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 43,
+      "timestamp": "2025-07-18T23:11:35.824387",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 44,
+      "timestamp": "2025-07-18T23:17:16.057709",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 45,
+      "timestamp": "2025-07-18T23:23:05.696603",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 46,
+      "timestamp": "2025-07-18T23:28:58.220777",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 47,
+      "timestamp": "2025-07-18T23:34:45.436802",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 48,
+      "timestamp": "2025-07-18T23:40:22.074670",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 49,
+      "timestamp": "2025-07-18T23:45:49.406652",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 50,
+      "timestamp": "2025-07-18T23:51:23.002617",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 51,
+      "timestamp": "2025-07-18T23:56:55.310480",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 52,
+      "timestamp": "2025-07-19T00:02:27.046451",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 53,
+      "timestamp": "2025-07-19T00:08:05.015663",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 54,
+      "timestamp": "2025-07-19T00:13:43.649272",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 55,
+      "timestamp": "2025-07-19T00:19:22.973920",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 56,
+      "timestamp": "2025-07-19T00:25:01.513900",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 57,
+      "timestamp": "2025-07-19T00:30:40.547599",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 58,
+      "timestamp": "2025-07-19T00:36:08.102541",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 59,
+      "timestamp": "2025-07-19T00:41:45.780047",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 60,
+      "timestamp": "2025-07-19T00:47:27.920981",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 61,
+      "timestamp": "2025-07-19T01:05:23.490045",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 62,
+      "timestamp": "2025-07-19T01:59:18.483752",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1450,
+      "data_size": 1450
+    },
+    {
+      "cycle": 63,
+      "timestamp": "2025-07-19T02:04:50.839352",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1600,
+      "data_size": 1600
+    },
+    {
+      "cycle": 64,
+      "timestamp": "2025-07-19T16:29:16.704216",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 1900,
+      "data_size": 1900
+    },
+    {
+      "cycle": 65,
+      "timestamp": "2025-07-19T17:20:53.228858",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 66,
+      "timestamp": "2025-07-19T19:30:12.900225",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 67,
+      "timestamp": "2025-07-19T20:11:35.658658",
+      "drift_type": "combined_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 68,
+      "timestamp": "2025-07-19T20:17:23.765092",
+      "drift_type": "input_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 69,
+      "timestamp": "2025-07-19T20:23:18.256630",
+      "drift_type": "label_drift",
+      "drift_strength": 0.8,
+      "new_samples": 150,
+      "total_size": 2000,
+      "data_size": 2000
+    },
+    {
+      "cycle": 70,
+      "timestamp": "2025-07-20T02:55:07.181778",
+      "drift_type": "concept_drift",
+      "drift_strength": 0.8,
+      "new_samples": 200,
+      "total_size": 200,
+      "data_size": 200
+    }
+  ],
+  "current_drift_strength": 0.8,
+  "last_detected_drift": null,
+  "failed_detections": 69,
+  "strategy_adaptation_count": 70,
+  "baseline_stats": {
+    "Time_spent_Alone": {
+      "mean": 4.50581600281988,
+      "std": 3.4411804188954194,
+      "min": 0.0,
+      "max": 11.0
+    },
+    "Social_event_attendance": {
+      "mean": 3.9633544749823817,
+      "std": 2.8726078948864857,
+      "min": 0.0,
+      "max": 10.0
+    },
+    "Going_outside": {
+      "mean": 3.0,
+      "std": 2.2215973978818186,
+      "min": 0.0,
+      "max": 7.0
+    },
+    "Friends_circle_size": {
+      "mean": 6.268862911795961,
+      "std": 4.2323404202509165,
+      "min": 0.0,
+      "max": 15.0
+    },
+    "Post_frequency": {
+      "mean": 3.564726631393298,
+      "std": 2.8935865769101947,
+      "min": 0.0,
+      "max": 10.0
+    },
+    "Stage_fear": {
+      "value_counts": {
+        "No": 1490,
+        "Yes": 1410
+      }
+    },
+    "Drained_after_socializing": {
+      "value_counts": {
+        "No": 1493,
+        "Yes": 1407
+      }
+    },
+    "Personality": {
+      "value_counts": {
+        "Extrovert": 1491,
+        "Introvert": 1409
+      }
+    }
+  },
+  "created_at": "2025-07-17T23:27:32.222562",
+  "updated_at": "2025-07-20T02:55:07.181778"
+}
